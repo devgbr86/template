@@ -43,8 +43,7 @@
      <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
      <!-- CSS customizado -->
-     <link rel="stylesheet" href="./css/base.css" />
-     <link rel="stylesheet" href="./css/responsive.css" />
+     <link rel="stylesheet" href="./style.css" />
 </head>
 
 <body x-data="{ showScrollTop: false }" @scroll.window="showScrollTop = (window.scrollY > 300)">
@@ -53,9 +52,13 @@
      <!-- Header / Navbar -->
      <!-- ==================== -->
      <header>
-          <nav x-data="{ mobileMenuOpen: false }">
+          <nav>
                <img src="./assets/icons/coffee.svg" alt="Logo @coffeeshop" />
-               <div id="pageLinks" class="page-links"></div>
+               <div class="page-links">
+                    <a href="#sobre">Sobre</a>
+                    <a href="#cardapio">Cardápio</a>
+                    <a href="#contato">Contato</a>
+               </div>
           </nav>
      </header>
 
@@ -63,15 +66,195 @@
      <!-- Main Content -->
      <!-- ==================== -->
      <main id="content">
-          <div data-section="hero"></div>
-          <div data-section="work"></div>
-          <div data-section="mail"></div>
+
+          <!-- HERO / SOBRE -->
+          <section id="sobre" data-aos="fade-up">
+               <img src="./assets/img/img01.avif" class="section-avatar" alt="@coffeeshop Logo" loading="lazy">
+               <h1>@COFFEESHOP</h1>
+
+               <p>
+                    Somos uma <strong>cafeteria artesanal</strong> localizada no coração de Belo Horizonte,
+                    especializada em <strong>cafés especiais, bebidas quentes exclusivas e doces caseiros</strong>.
+               </p>
+
+               <p>
+                    Nossa missão é proporcionar momentos únicos através de grãos selecionados,
+                    métodos de preparo artesanais e um ambiente acolhedor perfeito para trabalhar,
+                    estudar ou simplesmente relaxar com um bom café.
+               </p>
+
+               <p>
+                    <strong>Horário de Funcionamento:</strong> Segunda a Sábado, das 07:00 às 19:00 | Domingo, das 09:00
+                    às 17:00
+               </p>
+          </section>
+
+          <!-- CARDÁPIO -->
+          <section id="cardapio" data-aos="fade-up" data-aos-delay="200">
+               <img src="./assets/img/img02.avif" class="section-avatar" alt="Cardápio" loading="lazy">
+
+               <h1>CARDÁPIO</h1>
+
+               <div x-data="{ activeCategory: 1 }" class="accordion">
+
+                    <!-- Categoria 1: Cafés Especiais -->
+                    <div class="accordion-item">
+                         <button @click="activeCategory = activeCategory === 1 ? null : 1" class="accordion-header">
+                              <span>
+                                   <img src="./assets/icons/code.svg" class="icon" alt="">
+                                   Cafés Especiais
+                              </span>
+                              <span x-text="activeCategory === 1 ? '−' : '+'"></span>
+                         </button>
+                         <div x-show="activeCategory === 1" x-collapse class="accordion-content">
+                              <p>
+                                   Cafés preparados com grãos 100% arábica de fazendas certificadas,
+                                   torrados artesanalmente para realçar os sabores únicos de cada região.
+                              </p>
+
+                              <p class="content-title">Opções:</p>
+                              <ul>
+                                   <li><strong>Espresso Tradicional</strong> - R$ 8,00</li>
+                                   <li><strong>Cappuccino Cremoso</strong> - R$ 12,00</li>
+                                   <li><strong>Latte Macchiato</strong> - R$ 13,00</li>
+                                   <li><strong>Café Coado V60</strong> - R$ 15,00</li>
+                                   <li><strong>Cold Brew (Gelado)</strong> - R$ 14,00</li>
+                                   <li><strong>Affogato (Café + Sorvete)</strong> - R$ 16,00</li>
+                              </ul>
+                         </div>
+                    </div>
+
+                    <!-- Categoria 2: Bebidas Quentes Especiais -->
+                    <div class="accordion-item">
+                         <button @click="activeCategory = activeCategory === 2 ? null : 2" class="accordion-header">
+                              <span>
+                                   <img src="./assets/icons/code.svg" class="icon" alt="">
+                                   Bebidas Quentes Especiais
+                              </span>
+                              <span x-text="activeCategory === 2 ? '−' : '+'"></span>
+                         </button>
+                         <div x-show="activeCategory === 2" x-collapse class="accordion-content">
+                              <p>
+                                   Bebidas quentes artesanais preparadas com leite premium e ingredientes selecionados,
+                                   perfeitas para dias frios ou para quem busca algo diferente.
+                              </p>
+
+                              <p class="content-title">Opções:</p>
+                              <ul>
+                                   <li><strong>Chocolate Quente Belga</strong> - R$ 14,00</li>
+                                   <li><strong>Chai Latte Especial</strong> - R$ 13,00</li>
+                                   <li><strong>Matcha Latte Orgânico</strong> - R$ 15,00</li>
+                                   <li><strong>Golden Milk (Leite Dourado)</strong> - R$ 12,00</li>
+                                   <li><strong>Mocaccino Premium</strong> - R$ 14,00</li>
+                              </ul>
+                         </div>
+                    </div>
+
+                    <!-- Categoria 3: Doces Caseiros -->
+                    <div class="accordion-item">
+                         <button @click="activeCategory = activeCategory === 3 ? null : 3" class="accordion-header">
+                              <span>
+                                   <img src="./assets/icons/code.svg" class="icon" alt="">
+                                   Doces & Acompanhamentos
+                              </span>
+                              <span x-text="activeCategory === 3 ? '−' : '+'"></span>
+                         </button>
+                         <div x-show="activeCategory === 3" x-collapse class="accordion-content">
+                              <p>
+                                   Doces e salgados produzidos diariamente em nossa confeitaria própria,
+                                   usando receitas tradicionais e ingredientes frescos.
+                              </p>
+
+                              <p class="content-title">Opções:</p>
+                              <ul>
+                                   <li><strong>Brownie de Chocolate Belga</strong> - R$ 10,00</li>
+                                   <li><strong>Cheesecake de Frutas Vermelhas</strong> - R$ 12,00</li>
+                                   <li><strong>Croissant de Chocolate</strong> - R$ 9,00</li>
+                                   <li><strong>Pão de Queijo Mineiro</strong> - R$ 8,00</li>
+                                   <li><strong>Torta de Limão</strong> - R$ 11,00</li>
+                                   <li><strong>Cookie Americano</strong> - R$ 6,00</li>
+                              </ul>
+                         </div>
+                    </div>
+               </div>
+
+               <div class="cta-container dual">
+                    <a href="#contato" class="btn-primary">
+                         <img src="./assets/icons/preview.svg" class="icon" alt="">
+                         Fazer Pedido
+                    </a>
+               </div>
+          </section>
+
+          <!-- CONTATO -->
+          <section id="contato" data-aos="fade-up">
+               <img src="./assets/img/img03.avif" class="section-avatar" alt="@coffeeshop Logo" loading="lazy">
+               <h1>CONTATO & LOCALIZAÇÃO</h1>
+
+               <p class="form-intro">
+                    Entre em contato para reservas, encomendas especiais, eventos corporativos ou dúvidas.
+                    Estamos prontos para preparar o melhor café da sua vida!
+               </p>
+
+               <div class="social-links">
+
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/553132224455" target="_blank" rel="noopener noreferrer" class="social-link">
+                         <img src="./assets/icons/whatsapp.svg" class="icon" alt="WhatsApp">
+                         <span>(31) 3222-4455</span>
+                    </a>
+
+                    <!-- Email -->
+                    <a href="mailto:contato@coffeeshop.com.br" class="social-link">
+                         <img src="./assets/icons/mail.svg" class="icon" alt="Email">
+                         <span>contato@coffeeshop.com.br</span>
+                    </a>
+
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/coffeeshop.bh/" target="_blank" rel="noopener noreferrer"
+                         class="social-link">
+                         <img src="./assets/icons/instagram.svg" class="icon" alt="Instagram">
+                         <span>@coffeeshop.bh</span>
+                    </a>
+
+                    <!-- Endereço -->
+                    <div class="social-link" style="cursor: default; opacity: 0.9;">
+                         <img src="./assets/icons/code.svg" class="icon" alt="Endereço">
+                         <span>Rua dos Cafés, 420 - Savassi, BH - MG</span>
+                    </div>
+
+               </div>
+
+               <div class="cta-container dual" style="margin-top: 2rem;">
+                    <a href="https://wa.me/553132224455?text=Olá!%20Gostaria%20de%20fazer%20uma%20reserva"
+                         target="_blank" rel="noopener noreferrer" class="btn-primary">
+                         <img src="./assets/icons/whatsapp.svg" class="icon" alt="">
+                         Fazer Reserva
+                    </a>
+               </div>
+          </section>
+
      </main>
 
      <!-- ==================== -->
      <!-- Footer -->
      <!-- ==================== -->
-     <div data-section="footer"></div>
+     <footer>
+          <p>&copy; 2025 @coffeeshop - Cafeteria Artesanal | Belo Horizonte, MG</p>
+          <p style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+               Todos os direitos reservados | CNPJ: 12.345.678/0001-90
+          </p>
+     </footer>
+
+     <!-- ==================== -->
+     <!-- Scroll to Top Button -->
+     <!-- ==================== -->
+     <button x-show="showScrollTop" @click="window.scrollTo({top: 0, behavior: 'smooth'})" x-transition
+          class="scroll-top" aria-label="Voltar ao topo">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+          </svg>
+     </button>
 
      <!-- ==================== -->
      <!-- Scripts -->
@@ -79,8 +262,14 @@
      <!-- AOS Library -->
      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-     <!-- App Scripts (ordem importa!) -->
-     <script src="./js/script.js"></script>
+     <!-- Initialize AOS -->
+     <script>
+          AOS.init({
+               duration: 800,
+               once: true,
+               offset: 100
+          });
+     </script>
 
 </body>
 
