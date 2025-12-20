@@ -1,32 +1,27 @@
 // ============================================================
-// ARQUIVO: script.js
-// DESCRIÇÃO: Script principal - Inicialização @coffeeshop
-// STACK: Alpine.js + AOS.js
+// @coffeeshop - Script Principal
+// Vanilla JavaScript (Alpine.js removido por não ser necessário)
 // ============================================================
 
 // ========================================
-// PARTE 1: INICIALIZAÇÃO PRINCIPAL
+// INICIALIZAÇÃO
 // ========================================
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('☕ Iniciando @coffeeshop...');
   
-  setTimeout(() => {
-    // 1. Inicializar animações AOS
-    initAOS();
-    
-    // 2. Smooth scroll para âncoras
-    setupSmoothScroll();
-    
-    // 3. Inicializar funcionalidades específicas da cafeteria
-    initCoffeeFeatures();
-    
-    console.log('✓ @coffeeshop totalmente inicializada');
-  }, 100);
+  // Inicializar componentes
+  initAOS();
+  setupSmoothScroll();
+  setupScrollTop();
+  initScrollSpy();
+  checkOpeningHours();
+  
+  console.log('✓ @coffeeshop carregada com sucesso');
 });
 
 // ========================================
-// PARTE 2: INICIALIZAR AOS
+// AOS - ANIMAÇÕES
 // ========================================
 
 function initAOS() {
@@ -39,13 +34,11 @@ function initAOS() {
       disable: false
     });
     console.log('✓ Animações AOS inicializadas');
-  } else {
-    console.warn('⚠️ AOS não está disponível');
   }
 }
 
 // ========================================
-// PARTE 3: SMOOTH SCROLL
+// SMOOTH SCROLL
 // ========================================
 
 function setupSmoothScroll() {
@@ -53,16 +46,13 @@ function setupSmoothScroll() {
     anchor.addEventListener('click', function (e) {
       const href = this.getAttribute('href');
       
-      // Ignora links vazios ou inválidos
       if (href === '#' || href === null || href.length <= 1) return;
       
       e.preventDefault();
-      
       const target = document.querySelector(href);
       
       if (target) {
-        // Offset para compensar o header fixo (ajuste conforme necessário)
-        const headerOffset = 80;
+        const headerOffset = 100;
         const elementPosition = target.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         
@@ -70,10 +60,6 @@ function setupSmoothScroll() {
           top: offsetPosition,
           behavior: 'smooth'
         });
-        
-        console.log(`✓ Scroll suave para: ${href}`);
-      } else {
-        console.warn(`⚠️ Target não encontrado: ${href}`);
       }
     });
   });
@@ -82,22 +68,74 @@ function setupSmoothScroll() {
 }
 
 // ========================================
-// PARTE 4: FUNCIONALIDADES DA CAFETERIA
+// SCROLL TO TOP BUTTON
 // ========================================
 
-function initCoffeeFeatures() {
-  // Adicionar classe ao body indicando que o site está pronto
-  document.body.classList.add('coffee-ready');
+function setupScrollTop() {
+  const scrollTopBtn = document.getElementById('scrollTop');
   
-  // Log de horário de funcionamento
-  checkOpeningHours();
+  if (!scrollTopBtn) return;
   
-  // Highlight do link ativo no scroll
-  initScrollSpy();
+  // Mostrar/ocultar botão baseado no scroll
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      scrollTopBtn.classList.add('visible');
+    } else {
+      scrollTopBtn.classList.remove('visible');
+    }
+  });
+  
+  // Click para voltar ao topo
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+  
+  console.log('✓ Scroll to top configurado');
 }
 
 // ========================================
-// PARTE 5: VERIFICAR HORÁRIO
+// SCROLL SPY (HIGHLIGHT LINK ATIVO)
+// ========================================
+
+function initScrollSpy() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  
+  if (sections.length === 0 || navLinks.length === 0) return;
+  
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          
+          navLinks.forEach((link) => {
+            link.classList.remove('active');
+          });
+          
+          const activeLink = document.querySelector(`nav a[href="#${id}"]`);
+          if (activeLink) {
+            activeLink.classList.add('active');
+          }
+        }
+      });
+    },
+    {
+      threshold: 0.3,
+      rootMargin: '-100px 0px -60% 0px'
+    }
+  );
+  
+  sections.forEach((section) => observer.observe(section));
+  
+  console.log('✓ ScrollSpy inicializado');
+}
+
+// ========================================
+// VERIFICAR HORÁRIO DE FUNCIONAMENTO
 // ========================================
 
 function checkOpeningHours() {
@@ -126,124 +164,40 @@ function checkOpeningHours() {
 }
 
 // ========================================
-// PARTE 6: SCROLL SPY (HIGHLIGHT LINK ATIVO)
+// NAVBAR BACKGROUND ON SCROLL
 // ========================================
 
-function initScrollSpy() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('header');
   
-  if (sections.length === 0 || navLinks.length === 0) {
-    console.warn('⚠️ ScrollSpy não inicializado: sections ou links não encontrados');
-    return;
-  }
-  
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.getAttribute('id');
-          
-          // Remove classe ativa de todos os links
-          navLinks.forEach((link) => {
-            link.classList.remove('active');
-          });
-          
-          // Adiciona classe ativa ao link correspondente
-          const activeLink = document.querySelector(`nav a[href="#${id}"]`);
-          if (activeLink) {
-            activeLink.classList.add('active');
-          }
-        }
-      });
-    },
-    {
-      threshold: 0.3,
-      rootMargin: '-80px 0px -60% 0px'
-    }
-  );
-  
-  sections.forEach((section) => observer.observe(section));
-  
-  console.log('✓ ScrollSpy inicializado');
-}
-
-// ========================================
-// PARTE 7: UTILIDADES GLOBAIS
-// ========================================
-
-// Refresh AOS
-window.refreshAOS = function() {
-  if (typeof AOS !== 'undefined') {
-    AOS.refresh();
-    console.log('✓ AOS atualizado');
-  }
-};
-
-// Scroll para o topo
-window.scrollToTop = function() {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-  console.log('✓ Scroll para o topo');
-};
-
-// Verificar se está aberto
-window.isOpen = function() {
-  return checkOpeningHours();
-};
-
-// Log de performance ao carregar
-window.addEventListener('load', () => {
-  const loadTime = (performance.now() / 1000).toFixed(2);
-  console.log(`⚡ @coffeeshop carregada em ${loadTime}s`);
-  
-  // Analytics ou tracking podem ser adicionados aqui
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'page_load', {
-      'load_time': loadTime
-    });
+  if (window.scrollY > 50) {
+    header.style.boxShadow = '0 4px 16px rgba(42, 24, 16, 0.1)';
+  } else {
+    header.style.boxShadow = 'none';
   }
 });
 
 // ========================================
-// PARTE 8: FEATURE DETECTION
+// PERFORMANCE LOG
 // ========================================
 
-// Detectar suporte a WebP
-function supportsWebP() {
-  const elem = document.createElement('canvas');
-  
-  if (elem.getContext && elem.getContext('2d')) {
-    return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-  }
-  
-  return false;
-}
-
-if (supportsWebP()) {
-  document.documentElement.classList.add('webp');
-  console.log('✓ Suporte a WebP detectado');
-} else {
-  document.documentElement.classList.add('no-webp');
-  console.log('⚠️ WebP não suportado');
-}
+window.addEventListener('load', () => {
+  const loadTime = (performance.now() / 1000).toFixed(2);
+  console.log(`⚡ @coffeeshop carregada em ${loadTime}s`);
+});
 
 // ========================================
-// PARTE 9: ERROR HANDLING
+// ERROR HANDLING
 // ========================================
 
-// Capturar erros globais
 window.addEventListener('error', (event) => {
   console.error('❌ Erro capturado:', event.error);
 });
 
-// Capturar promessas rejeitadas
 window.addEventListener('unhandledrejection', (event) => {
   console.error('❌ Promise rejeitada:', event.reason);
 });
 
 // ============================================================
-// FIM DO ARQUIVO: script.js
+// FIM DO SCRIPT
 // ============================================================
